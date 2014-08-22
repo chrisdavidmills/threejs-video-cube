@@ -1,0 +1,15 @@
+html,body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  height: inherit;
+  overflow: hidden;
+}
+
+canvas {
+  width: 100%;
+  height: inherit;
+}
