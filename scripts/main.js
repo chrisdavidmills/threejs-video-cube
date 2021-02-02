@@ -19,10 +19,18 @@ if (navigator.getUserMedia) {
 
       // Success callback
       function(stream) {
-      
-        var videoURL = window.URL.createObjectURL(stream);
+
         var video = document.createElement('video');
-        video.src = videoURL;
+        var videoURL;
+        try {
+          window.URL.createObjectURL(stream);
+          video.src = videoURL;
+        } catch(e) {
+          if (videoURL) {
+            window.URL.revokeObjectURL(videoURL)
+          }
+          video.srcObject = stream;
+        }
         video.onloadedmetadata = function() {
          video.play(); 
          threeRender(video);
