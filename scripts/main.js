@@ -1,23 +1,15 @@
-// fork getUserMedia for multiple browser versions, for the future
-// when more browsers support MediaRecorder
-
-navigator.getUserMedia = ( navigator.getUserMedia ||
-                       navigator.webkitGetUserMedia ||
-                       navigator.mozGetUserMedia ||
-                       navigator.msGetUserMedia);
-
 //main block for doing the audio recording
 
-if (navigator.getUserMedia) {
+if (navigator.mediaDevices.getUserMedia) {
    console.log('getUserMedia supported.');
-   navigator.getUserMedia (
+   navigator.mediaDevices.getUserMedia (
       // constraints - only audio needed for this app
       {
          audio: false,
          video: true
-      },
-
-      // Success callback
+      })
+      .then(
+      // Success
       function(stream) {
 
         var video = document.createElement('video');
@@ -32,16 +24,13 @@ if (navigator.getUserMedia) {
           video.srcObject = stream;
         }
         video.onloadedmetadata = function() {
-         video.play(); 
+         video.play();
          threeRender(video);
         };
-      },
-
-      // Error callback
-      function(err) {
+      })
+      .catch(function(err) {
          console.log('The following gUM error occured: ' + err);
-      }
-   );
+      });
 } else {
    console.log('getUserMedia not supported on your browser!');
 }
@@ -62,7 +51,7 @@ document.body.appendChild( renderer.domElement );
 var texture = new THREE.Texture(video);
 texture.wrapS = THREE.RepeatWrapping;
 texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set( 1, 1 ); 
+texture.repeat.set( 1, 1 );
 
 var geometry = new THREE.BoxGeometry(3,3,3);
 var material = new THREE.MeshLambertMaterial( { map: texture, shading: THREE.FlatShading } );
